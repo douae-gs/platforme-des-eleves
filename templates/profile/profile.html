@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Profil - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Mon Profil</h1>
+    <p class="page-subtitle">Informations personnelles</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Photo de profil</h2>
+    </div>
+    <div style="text-align: center; padding: 20px;">
+        {% if user.photo_profil and user.photo_profil != 'default-avatar.png' %}
+            <img src="{{ url_for('static', filename='img/' + user.photo_profil) }}" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color);">
+        {% else %}
+            <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); display: inline-flex; align-items: center; justify-content: center; font-size: 4rem; color: white; font-weight: 700; border: 4px solid var(--primary-color);">
+                {{ user.prenom[0]|upper }}{{ user.nom[0]|upper }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Informations personnelles</h2>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Nom</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.nom or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Prénom</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.prenom or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Adresse</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.adresse_residence or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Date de naissance</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.date_naissance.strftime('%d/%m/%Y') if user.date_naissance else 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Lieu de naissance</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.lieu_naissance or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Email</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.email or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">CNE/CNI</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.cin or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Numéro étudiant</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.numero_etudiant or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Année d'inscription</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.date_inscription.strftime('%Y') if user.date_inscription else 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Filière</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">{{ user.filiere or 'N/A' }}</p>
+        </div>
+
+        <div style="padding: 15px; background: var(--background); border-radius: 8px;">
+            <strong style="color: var(--primary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Niveau scolaire</strong>
+            <p style="margin: 5px 0 0 0; font-size: 1.1rem;">
+                {% if user.niveau_scolaire %}
+                    {{ user.niveau_scolaire }}
+                {% elif user.annee %}
+                    {% if user.cycle == 'prepa' %}
+                        {% if user.annee == '1A' %}Licence 1{% elif user.annee == '2A' %}Licence 2{% else %}{{ user.annee }}{% endif %}
+                    {% else %}
+                        {% if user.annee == '1A' %}Cycle ingénieur 1{% elif user.annee == '2A' %}Cycle ingénieur 2{% elif user.annee == '3A' %}Cycle ingénieur 3{% else %}{{ user.annee }}{% endif %}
+                    {% endif %}
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Statistiques</h2>
+    </div>
+    
+    <div class="grid grid-3">
+        <div style="text-align: center; padding: 20px; background: var(--background); border-radius: 8px;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);">{{ total_notes }}</div>
+            <div style="color: var(--text-light); margin-top: 5px;">Notes enregistrées</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: var(--background); border-radius: 8px;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);">{{ total_absences }}</div>
+            <div style="color: var(--text-light); margin-top: 5px;">Absences</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: var(--background); border-radius: 8px;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);">{{ moyenne_generale }}/20</div>
+            <div style="color: var(--text-light); margin-top: 5px;">Moyenne générale</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

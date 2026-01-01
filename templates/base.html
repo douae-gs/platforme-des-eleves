@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme des étudiants{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Réduire/Agrandir">
+                <span id="toggleIcon">☰</span>
+            </button>
+            
+            <div class="sidebar-header">
+                <div class="sidebar-logos">
+                    <img src="{{ url_for('static', filename='img/logo-ump.png') }}" alt="UMP" class="sidebar-logo">
+                    <img src="{{ url_for('static', filename='img/logo-ensa.png') }}" alt="ENSA" class="sidebar-logo">
+                </div>
+                <h2 class="sidebar-title">Plateforme des étudiants</h2>
+            </div>
+
+            {% if session.user_id %}
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user and user.photo_profil %}
+                        <img src="{{ url_for('static', filename='img/' + user.photo_profil) }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ (user.prenom[0] if user else 'U')|upper }}{{ (user.nom[0] if user else '')|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ session.user_name if session.user_name else 'Étudiant' }}</div>
+                <div class="user-email">{{ session.user_email if session.user_email else '' }}</div>
+            </div>
+            {% endif %}
+
+            <nav class="sidebar-menu">
+                <a href="{{ url_for('profile.profile') }}" class="sidebar-item {% if request.endpoint == 'profile.profile' %}active{% endif %}">
+                    <span class="sidebar-icon">👤</span>
+                    <span class="sidebar-text">Profil</span>
+                </a>
+                <a href="{{ url_for('notes.notes') }}" class="sidebar-item {% if request.endpoint == 'notes.notes' %}active{% endif %}">
+                    <span class="sidebar-icon">📊</span>
+                    <span class="sidebar-text">Notes</span>
+                </a>
+                <a href="{{ url_for('filiere.filieres') }}" class="sidebar-item {% if request.endpoint == 'filiere.filieres' %}active{% endif %}">
+                    <span class="sidebar-icon">📚</span>
+                    <span class="sidebar-text">Filières</span>
+                </a>
+                <a href="{{ url_for('absence.absences') }}" class="sidebar-item {% if request.endpoint == 'absence.absences' %}active{% endif %}">
+                    <span class="sidebar-icon">📅</span>
+                    <span class="sidebar-text">Absences</span>
+                </a>
+                <a href="{{ url_for('emploi.emploi_du_temps') }}" class="sidebar-item {% if request.endpoint == 'emploi.emploi_du_temps' %}active{% endif %}">
+                    <span class="sidebar-icon">🕐</span>
+                    <span class="sidebar-text">Emploi du temps</span>
+                </a>
+                <a href="{{ url_for('calendrier.calendrier_academique') }}" class="sidebar-item {% if request.endpoint == 'calendrier.calendrier_academique' %}active{% endif %}">
+                    <span class="sidebar-icon">📆</span>
+                    <span class="sidebar-text">Calendrier</span>
+                </a>
+                <a href="{{ url_for('contact.contact') }}" class="sidebar-item {% if request.endpoint == 'contact.contact' %}active{% endif %}">
+                    <span class="sidebar-icon">📞</span>
+                    <span class="sidebar-text">Contact</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-logout">
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout-sidebar">
+                    <span class="sidebar-icon">🚪</span>
+                    <span>Déconnexion</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            const icon = document.getElementById('toggleIcon');
+            icon.textContent = sidebar.classList.contains('collapsed') ? '☰' : '☰';
+        }
+
+        // Hover expand functionality (optionnel)
+        const sidebar = document.getElementById('sidebar');
+        let hoverTimeout;
+        
+        // Si la sidebar est collapsed, l'étendre au survol
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', function() {
+                if (sidebar.classList.contains('collapsed')) {
+                    clearTimeout(hoverTimeout);
+                    sidebar.classList.add('hover-expand');
+                }
+            });
+            
+            sidebar.addEventListener('mouseleave', function() {
+                if (sidebar.classList.contains('collapsed')) {
+                    hoverTimeout = setTimeout(function() {
+                        sidebar.classList.remove('hover-expand');
+                    }, 200);
+                }
+            });
+        }
+
+        // Mobile menu toggle
+        if (window.innerWidth <= 768) {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.add('collapsed');
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

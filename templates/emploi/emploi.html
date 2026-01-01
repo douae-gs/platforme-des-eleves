@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Emploi du temps - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Emploi du temps</h1>
+    <p class="page-subtitle">Sélectionnez votre filière pour consulter l'emploi du temps</p>
+</div>
+
+<div class="card">
+    <form method="get" action="{{ url_for('emploi.emploi_du_temps') }}" style="display: flex; gap: 15px; align-items: flex-end;">
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label for="filiere" class="form-label">Choisir une filière</label>
+            <select name="filiere" id="filiere" class="form-select" required>
+                <option value="">-- Choisir une filière --</option>
+                {% for f in filieres %}
+                <option value="{{ f.id }}" {% if filiere_selectionnee == f.id %}selected{% endif %}>
+                    {{ f.nom }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Voir l'emploi</button>
+    </form>
+</div>
+
+{% if emploi %}
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Jour</th>
+                <th>Heure</th>
+                <th>Module</th>
+                <th class="table-centered">Type</th>
+                <th class="table-centered">Salle</th>
+                <th>Professeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in emploi %}
+            <tr>
+                <td style="font-weight: 600; color: var(--primary-color);">{{ c.jour }}</td>
+                <td>{{ c.heure }}</td>
+                <td>{{ c.module }}</td>
+                <td class="table-centered">{{ c.type_seance if c.type_seance else 'N/A' }}</td>
+                <td class="table-centered">{{ c.salle if c.salle else 'N/A' }}</td>
+                <td>{{ c.professeur if c.professeur else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% elif filiere_selectionnee %}
+<div class="card">
+    <p style="text-align: center; color: var(--text-light); padding: 20px;">
+        Aucun cours programmé pour cette filière.
+    </p>
+</div>
+{% else %}
+<div class="card">
+    <p style="text-align: center; color: var(--text-light); padding: 20px;">
+        Veuillez sélectionner une filière pour afficher l'emploi du temps.
+    </p>
+</div>
+{% endif %}
+{% endblock %}

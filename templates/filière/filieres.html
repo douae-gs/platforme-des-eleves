@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Filières - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Ma Filière</h1>
+    <p class="page-subtitle">Modules de votre filière</p>
+</div>
+
+{% if filieres %}
+    {% for filiere in filieres %}
+    <div class="card" style="margin-bottom: 40px;">
+        <div class="card-header">
+            <h2 class="card-title" style="color: var(--primary-color);">{{ filiere.nom }}</h2>
+            <p style="color: var(--text-light); margin-top: 5px;">
+                <strong>Code :</strong> {{ filiere.code }} | 
+                <strong>Type :</strong> {{ filiere.type if filiere.type else 'N/A' }} | 
+                <strong>Durée :</strong> {{ filiere.duree if filiere.duree else 'N/A' }}
+            </p>
+            {% if filiere.description %}
+            <p style="margin-top: 10px; color: var(--text-light);">{{ filiere.description }}</p>
+            {% endif %}
+        </div>
+
+        {% if filiere.modules %}
+        <div style="margin-top: 20px;">
+            <h3 style="color: var(--text-dark); margin-bottom: 15px; font-size: 1.2rem;">Modules de la filière</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Code Module</th>
+                            <th>Nom Module</th>
+                            <th class="table-centered">Volume horaire</th>
+                            <th>Professeur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for module in filiere.modules %}
+                        <tr>
+                            <td><strong>{{ module.code }}</strong></td>
+                            <td>{{ module.nom }}</td>
+                            <td class="table-centered">{{ module.volume_horaire if module.volume_horaire else 'N/A' }}</td>
+                            <td>{{ module.professeur_responsable if module.professeur_responsable else 'N/A' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div style="padding: 20px; text-align: center; color: var(--text-light); background: var(--background); border-radius: 8px;">
+            Aucun module disponible pour cette filière.
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+<div class="card">
+    <p style="text-align: center; color: var(--text-light); padding: 20px;">
+        Aucune filière disponible.
+    </p>
+</div>
+{% endif %}
+{% endblock %}

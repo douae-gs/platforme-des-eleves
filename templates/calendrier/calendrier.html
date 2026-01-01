@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Calendrier Académique - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Calendrier Académique</h1>
+    <p class="page-subtitle">Année Universitaire 2025-2026</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">📆 Semestre S1</h2>
+    </div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Événement</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>11 janvier 2026</strong></td>
+                    <td>Semaine de révision</td>
+                    <td><span class="badge badge-info">Académique</span></td>
+                </tr>
+                <tr>
+                    <td><strong>19 janvier 2026</strong></td>
+                    <td>Examens S1</td>
+                    <td><span class="badge badge-warning">Examen</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">📆 Semestre S2</h2>
+    </div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Événement</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>29 mars - 1er avril 2026</strong></td>
+                    <td>Vacances / Fête</td>
+                    <td><span class="badge badge-success">Vacances</span></td>
+                </tr>
+                <tr>
+                    <td><strong>7 avril 2026</strong></td>
+                    <td>DS (Devoir Surveillé)</td>
+                    <td><span class="badge badge-warning">Examen</span></td>
+                </tr>
+                <tr>
+                    <td><strong>30 avril 2026</strong></td>
+                    <td>Semaine de révision</td>
+                    <td><span class="badge badge-info">Académique</span></td>
+                </tr>
+                <tr>
+                    <td><strong>1er mai 2026</strong></td>
+                    <td>Fête du Travail</td>
+                    <td><span class="badge badge-secondary">Jour férié</span></td>
+                </tr>
+                <tr>
+                    <td><strong>1er - 11 mai 2026</strong></td>
+                    <td>Vacances de printemps</td>
+                    <td><span class="badge badge-success">Vacances</span></td>
+                </tr>
+                <tr>
+                    <td><strong>7 juin 2026</strong></td>
+                    <td>Rattrapage</td>
+                    <td><span class="badge badge-danger">Examen</span></td>
+                </tr>
+                <tr>
+                    <td><strong>14 juin 2026</strong></td>
+                    <td>Délibération</td>
+                    <td><span class="badge badge-info">Académique</span></td>
+                </tr>
+                <tr>
+                    <td><strong>6 - 8 juillet 2026</strong></td>
+                    <td>Aïd Al Adha</td>
+                    <td><span class="badge badge-secondary">Jour férié</span></td>
+                </tr>
+                <tr>
+                    <td><strong>16 juillet 2026</strong></td>
+                    <td>Examen final</td>
+                    <td><span class="badge badge-warning">Examen</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card" style="background: var(--background);">
+    <div style="padding: 20px;">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Légende</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+            <span class="badge badge-info">Académique</span>
+            <span class="badge badge-warning">Examen</span>
+            <span class="badge badge-success">Vacances</span>
+            <span class="badge badge-secondary">Jour férié</span>
+            <span class="badge badge-danger">Rattrapage</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

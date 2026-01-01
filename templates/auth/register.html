@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Eleveplatform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .register-box {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px var(--shadow);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .register-logos {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .register-logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .register-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .register-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        .password-requirements ul {
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .password-requirements li {
+            margin: 5px 0;
+        }
+
+        .password-requirements li.valid {
+            color: var(--success);
+        }
+
+        .password-requirements li.invalid {
+            color: var(--error);
+        }
+
+        .password-toggle-container {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <div class="register-logos">
+                <img src="{{ url_for('static', filename='img/logo-ump.png') }}" alt="UMP" class="register-logo">
+                <img src="{{ url_for('static', filename='img/logo-ensa.png') }}" alt="ENSA" class="register-logo">
+            </div>
+
+            <h1 class="register-title">Créer un compte</h1>
+            <p class="register-subtitle">Espace Étudiant - ENSA</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm" autocomplete="off">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" id="nom" name="nom" class="form-input" placeholder="Votre nom" required autocomplete="off">
+                        <div class="form-error" id="nomError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" class="form-input" placeholder="Votre prénom" required autocomplete="off">
+                        <div class="form-error" id="prenomError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Adresse email</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Votre email" required autocomplete="off">
+                    <div class="form-error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="filiere" class="form-label">Filière</label>
+                    <select id="filiere" name="filiere" class="form-select" required>
+                        <option value="">Choisir une filière</option>
+                        <option value="CP1">CP1</option>
+                        <option value="CP2">CP2</option>
+                        <option value="ITIRC">ITIRC</option>
+                        <option value="GE">GE</option>
+                        <option value="GINFO">GINFO</option>
+                    </select>
+                    <div class="form-error" id="filiereError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <div class="password-toggle-container">
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Minimum 6 caractères" required autocomplete="new-password">
+                        <button type="button" class="password-toggle-btn" onclick="togglePassword('password')">
+                            <span id="toggleIcon1">&#128065;</span>
+                        </button>
+                    </div>
+                    <div class="form-error" id="passwordError"></div>
+                    <div class="password-requirements">
+                        <ul id="passwordChecks">
+                            <li id="lengthCheck">Au moins 6 caractères</li>
+                            <li id="upperCheck">Au moins une majuscule</li>
+                            <li id="lowerCheck">Au moins une minuscule</li>
+                            <li id="numberCheck">Au moins un chiffre</li>
+                            <li id="spaceCheck">Pas d'espaces</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">Confirmer le mot de passe</label>
+                    <div class="password-toggle-container">
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Retapez votre mot de passe" required autocomplete="new-password">
+                        <button type="button" class="password-toggle-btn" onclick="togglePassword('confirm_password')">
+                            <span id="toggleIcon2">&#128065;</span>
+                        </button>
+                    </div>
+                    <div class="form-error" id="confirmPasswordError"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Créer mon compte
+                </button>
+            </form>
+
+            <div class="form-footer" style="text-align: center; margin-top: 25px; color: var(--text-light);">
+                Vous avez déjà un compte ? 
+                <a href="{{ url_for('auth.login') }}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Se connecter</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const iconId = fieldId === 'password' ? 'toggleIcon1' : 'toggleIcon2';
+            const icon = document.getElementById(iconId);
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.innerHTML = '&#128064;';
+            } else {
+                field.type = 'password';
+                icon.innerHTML = '&#128065;';
+            }
+        }
+
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            
+            const lengthCheck = document.getElementById('lengthCheck');
+            if (password.length >= 6) {
+                lengthCheck.classList.add('valid');
+                lengthCheck.classList.remove('invalid');
+            } else {
+                lengthCheck.classList.remove('valid');
+                lengthCheck.classList.add('invalid');
+            }
+            
+            const upperCheck = document.getElementById('upperCheck');
+            if (/[A-Z]/.test(password)) {
+                upperCheck.classList.add('valid');
+                upperCheck.classList.remove('invalid');
+            } else {
+                upperCheck.classList.remove('valid');
+                upperCheck.classList.add('invalid');
+            }
+            
+            const lowerCheck = document.getElementById('lowerCheck');
+            if (/[a-z]/.test(password)) {
+                lowerCheck.classList.add('valid');
+                lowerCheck.classList.remove('invalid');
+            } else {
+                lowerCheck.classList.remove('valid');
+                lowerCheck.classList.add('invalid');
+            }
+            
+            const numberCheck = document.getElementById('numberCheck');
+            if (/[0-9]/.test(password)) {
+                numberCheck.classList.add('valid');
+                numberCheck.classList.remove('invalid');
+            } else {
+                numberCheck.classList.remove('valid');
+                numberCheck.classList.add('invalid');
+            }
+            
+            const spaceCheck = document.getElementById('spaceCheck');
+            if (password === password.trim() && password.length > 0) {
+                spaceCheck.classList.add('valid');
+                spaceCheck.classList.remove('invalid');
+            } else {
+                spaceCheck.classList.remove('valid');
+                spaceCheck.classList.add('invalid');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            const nom = document.getElementById('nom');
+            if (!nom.value.trim()) {
+                showError('nom', 'Le nom est requis');
+                isValid = false;
+            }
+            
+            const prenom = document.getElementById('prenom');
+            if (!prenom.value.trim()) {
+                showError('prenom', 'Le prénom est requis');
+                isValid = false;
+            }
+            
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                showError('email', 'Email invalide');
+                isValid = false;
+            }
+            
+            const filiere = document.getElementById('filiere');
+            if (!filiere.value) {
+                showError('filiere', 'Choisissez une filière');
+                isValid = false;
+            }
+            
+            const password = document.getElementById('password').value;
+            if (password.length < 6) {
+                showError('password', 'Minimum 6 caractères');
+                isValid = false;
+            } else if (!/[A-Z]/.test(password)) {
+                showError('password', 'Au moins une majuscule');
+                isValid = false;
+            } else if (!/[a-z]/.test(password)) {
+                showError('password', 'Au moins une minuscule');
+                isValid = false;
+            } else if (!/[0-9]/.test(password)) {
+                showError('password', 'Au moins un chiffre');
+                isValid = false;
+            } else if (password !== password.trim()) {
+                showError('password', 'Pas d\'espaces');
+                isValid = false;
+            }
+            
+            const confirmPassword = document.getElementById('confirm_password').value;
+            if (password !== confirmPassword) {
+                showError('confirmPassword', 'Les mots de passe ne correspondent pas');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + 'Error');
+            field.classList.add('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        document.querySelectorAll('input, select').forEach(field => {
+            field.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

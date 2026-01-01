@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Contact et Aide</h1>
+    <p class="page-subtitle">Services et coordonnées utiles</p>
+</div>
+
+{% if contacts %}
+<div class="grid grid-2">
+    {% for contact in contacts %}
+    <div class="card">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;">{{ contact.service }}</h3>
+        <p><strong>Téléphone :</strong> {{ contact.telephone }}</p>
+        <p><strong>Email :</strong> <a href="mailto:{{ contact.email }}" style="color: var(--primary-color);">{{ contact.email }}</a></p>
+        {% if contact.bureau %}
+        <p><strong>Bureau :</strong> {{ contact.bureau }}</p>
+        {% endif %}
+        {% if contact.horaires %}
+        <p><strong>Horaires :</strong> {{ contact.horaires }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+<div class="card">
+    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Scolarité</h3>
+    <p><strong>Téléphone :</strong> +212 536-500-601</p>
+    <p><strong>Email :</strong> <a href="mailto:scolarite@ensao.ma" style="color: var(--primary-color);">scolarite@ensao.ma</a></p>
+    <p><strong>Horaires :</strong> Lundi - Vendredi : 9h00 - 17h00</p>
+</div>
+
+<div class="card">
+    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Direction</h3>
+    <p><strong>Téléphone :</strong> +212 536-500-600</p>
+    <p><strong>Email :</strong> <a href="mailto:direction@ensao.ma" style="color: var(--primary-color);">direction@ensao.ma</a></p>
+    <p><strong>Horaires :</strong> Sur rendez-vous</p>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">📍 Localisation de l'école</h2>
+    </div>
+    <div style="width: 100%; height: 400px; border-radius: 8px; overflow: hidden; margin-top: 20px;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3282.170250211734!2d-1.8963395999999997!3d34.65040309999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd787cbdbf96caef%3A0x23a99f5d4e9a3161!2s%C3%89cole%20Nationale%20des%20Sciences%20Appliqu%C3%A9es%20d&#39;Oujda!5e0!3m2!1sen!2sma!4v1767285743387!5m2!1sen!2sma" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <p style="margin-top: 15px; color: var(--text-light);">
+        <strong>Adresse :</strong> École Nationale des Sciences Appliquées, Oujda, Maroc
+    </p>
+</div>
+{% endblock %}

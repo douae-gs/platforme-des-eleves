@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Mes Notes - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Mes Notes</h1>
+    <p class="page-subtitle">Consultation et suivi académique</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Moyenne générale du semestre : <span style="color: var(--primary-color); font-size: 1.8rem;">{{ moyenne }}/20</span></h2>
+    </div>
+</div>
+
+{% if notes %}
+    {% if notes|length < 8 %}
+    <div class="alert alert-warning">
+        <strong>Attention :</strong> Vous devez avoir au moins 8 modules. Actuellement : {{ notes|length }} module(s).
+    </div>
+    {% endif %}
+
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Module</th>
+                    <th class="table-centered">DS (/20)</th>
+                    <th class="table-centered">Examen (/20)</th>
+                    <th class="table-centered">Note finale (/20)</th>
+                    <th class="table-centered">Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                <tr>
+                    <td><strong>{{ note.code_module }}</strong></td>
+                    <td>{{ note.nom_module }}</td>
+                    <td class="table-centered">{{ note.note_ds if note.note_ds else '-' }}</td>
+                    <td class="table-centered">{{ note.note_examen if note.note_examen else '-' }}</td>
+                    <td class="table-centered">
+                        <strong style="font-size: 1.1rem;">{{ note.note_finale_calculee if note.note_finale_calculee else note.note_generale }}/20</strong>
+                    </td>
+                    <td class="table-centered">
+                        {% if note.statut_calcule %}
+                            {% if note.statut_calcule == 'Validé' %}
+                                <span class="badge badge-success">Validé</span>
+                            {% else %}
+                                <span class="badge badge-danger">Rattrapage</span>
+                            {% endif %}
+                        {% elif note.statut %}
+                            {% if note.statut == 'Validé' %}
+                                <span class="badge badge-success">Validé</span>
+                            {% else %}
+                                <span class="badge badge-danger">Rattrapage</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-warning">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card" style="margin-top: 30px; background: var(--background);">
+        <div style="padding: 15px;">
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;">Formule de calcul</h3>
+            <p style="margin: 5px 0;"><strong>Note finale = DS × 0.5 + Examen × 0.5</strong></p>
+            <p style="margin: 5px 0; color: var(--text-light); font-size: 0.9rem;">
+                <strong>Statut :</strong> Validé si ≥ 12 / Rattrapage si < 12
+            </p>
+        </div>
+    </div>
+{% else %}
+<div class="card">
+    <p style="text-align: center; color: var(--text-light); padding: 20px;">
+        Aucune note disponible pour le moment.
+    </p>
+</div>
+{% endif %}
+{% endblock %}

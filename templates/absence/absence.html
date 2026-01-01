@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Absences - Plateforme des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Absences</h1>
+    <p class="page-subtitle">Consultez les absences enregistrées</p>
+</div>
+
+{% if absences %}
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Étudiant</th>
+                <th>Module</th>
+                <th class="table-centered">Date</th>
+                <th class="table-centered">Heure</th>
+                <th>Filière</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for abs in absences %}
+            <tr>
+                <td><strong>{{ abs.prenom }} {{ abs.nom }}</strong></td>
+                <td>{{ abs.module }}</td>
+                <td class="table-centered">{{ abs.date_absence.strftime('%d/%m/%Y') if abs.date_absence else 'N/A' }}</td>
+                <td class="table-centered">{{ abs.heure if abs.heure else 'N/A' }}</td>
+                <td>{{ abs.filiere_nom if abs.filiere_nom else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card">
+    <p style="text-align: center; color: var(--text-light); padding: 20px;">
+        Aucune absence enregistrée.
+    </p>
+</div>
+{% endif %}
+{% endblock %}
