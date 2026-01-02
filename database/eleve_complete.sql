@@ -317,3 +317,29 @@ JOIN absences a2
  ALTER TABLE absences
 ADD CONSTRAINT unique_absence
 UNIQUE (etudiant_id, module, date_absence, heure);
+
+
+
+DELETE e1
+FROM emploi e1
+JOIN emploi e2
+  ON e1.filiere_id = e2.filiere_id
+ AND e1.jour = e2.jour
+ AND e1.heure = e2.heure
+ AND e1.module = e2.module
+ AND e1.id > e2.id;
+
+
+
+
+ ALTER TABLE emploi
+ADD CONSTRAINT unique_emploi
+UNIQUE (filiere_id, jour, heure, module);
+
+
+
+
+
+
+
+
