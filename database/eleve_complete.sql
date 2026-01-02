@@ -251,7 +251,10 @@ INSERT INTO notes (etudiant_id, code_module, nom_module, note_ds, note_examen, n
 -- ABSENCES (pour l'utilisateur TEST)
 INSERT INTO absences (etudiant_id, module, date_absence, heure, filiere_id) VALUES
 ((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Programmation Orientée Objet', '2024-12-15', '08h00-10h00', (SELECT id FROM filieres WHERE code = 'GI')),
-((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Mathématiques Appliquées', '2024-12-18', '10h00-12h00', (SELECT id FROM filieres WHERE code = 'GI'));
+((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Mathématiques Appliquées', '2024-12-18', '10h00-12h00', (SELECT id FROM filieres WHERE code = 'GI')),
+((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Mathématiques Appliquées', '2024-12-05', '10h00-12h00', (SELECT id FROM filieres WHERE code = 'GI')),
+((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Mathématiques Appliquées', '2024-12-06', '10h00-12h00', (SELECT id FROM filieres WHERE code = 'GI')),
+((SELECT id FROM etudiants WHERE email = 'test@ensa.ma'), 'Mathématiques Appliquées', '2024-12-01', '10h00-12h00', (SELECT id FROM filieres WHERE code = 'GI'));
 -- EMPLOI DU TEMPS (pour ITIRC)
 INSERT INTO emploi (filiere_id, jour, heure, module, type_seance, salle, professeur) VALUES
 (2, 'Lundi', '08h00-10h00', 'Programmation Orientée Objet', 'Cours', 'Amphi A', 'Dr. Alami'),
@@ -290,3 +293,27 @@ SELECT id, email, nom, prenom, filiere, mot_de_passe
 FROM etudiants 
 ORDER BY id;
 
+ALTER TABLE absences
+ADD UNIQUE unique_absence (etudiant_id, module, date_absence, heure);
+
+
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+
+DELETE a1
+FROM absences a1
+JOIN absences a2
+  ON a1.etudiant_id = a2.etudiant_id
+ AND a1.module = a2.module
+ AND a1.date_absence = a2.date_absence
+ AND a1.heure = a2.heure
+ AND a1.id > a2.id;
+ 
+ 
+ 
+ ALTER TABLE absences
+ADD CONSTRAINT unique_absence
+UNIQUE (etudiant_id, module, date_absence, heure);
