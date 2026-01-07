@@ -22,7 +22,7 @@ def absences():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # 1️⃣ Récupérer les absences de l'étudiant connecté
+        # Récupérer les absences de l'étudiant connecté
         query = """
             SELECT a.*, e.nom, e.prenom, f.nom AS filiere_nom
             FROM absences a
@@ -34,7 +34,7 @@ def absences():
         cursor.execute(query, (session['user_id'],))
         absences_list = cursor.fetchall()
 
-        # 2️⃣ Vérifier dépassement de 3 absences PAR MODULE
+        #  Vérifier dépassement de 3 absences PAR MODULE
         warning_query = """
             SELECT module, COUNT(*) AS total_absences
             FROM absences
@@ -45,7 +45,7 @@ def absences():
         cursor.execute(warning_query, (session['user_id'],))
         warnings = cursor.fetchall()
 
-        # 3️⃣ Messages d’avertissement
+        #  Messages d’avertissement
         for w in warnings:
             flash(
                 f"⚠️ Attention : vous avez dépassé 3 absences dans le module vous devez apporter une justification a l'administration "
@@ -70,3 +70,4 @@ def absences():
             cursor.close()
         if conn:
             conn.close()
+
